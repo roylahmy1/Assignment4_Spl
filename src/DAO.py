@@ -38,7 +38,7 @@ class DAO(object):
         params = ins_dict.values()
         qmarks = ','.join(['?'] * len(ins_dict))
 
-        stmt = 'INSERT INTO {} ({}) VALUES ({})' \
+        stmt = 'INSERT INTO {} ({}) VALUES ({})'\
             .format(self._table_name, column_names, qmarks)
 
         self._conn.execute(stmt, params)

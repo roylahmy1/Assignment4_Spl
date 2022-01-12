@@ -1,7 +1,9 @@
 import atexit
 import sqlite3
 
-from src import Hat, Supplier, Order
+from src.Hat import Hat
+from src.Supplier import Supplier
+from src.Order import Order
 from src.DAO import DAO
 from src.OrdersWithSupplier import OrderWithSupplier
 
@@ -23,26 +25,38 @@ class Repository(object):
 
     def create_tables(self):
         self._conn.executescript("""
-            CREATE TABLE hats (
-                id      INTEGER         PRIMARY KEY,
-                topping    TEXT        NOT NULL,
-                supplier    INTEGER      NOT NULL,
-                quantity   INTEGER       NOT NULL
-                
-                FOREIGN KEY(supplier) REFERENCES suppliers(id)
-            );
-
+            DROP TABLE IF EXISTS 'suppliers'
+        """)
+        self._conn.executescript("""
             CREATE TABLE suppliers (
                 id                 INTEGER     PRIMARY KEY,
                 name                  TEXT      NOT NULL
             );
+            
+        """)
+        self._conn.executescript("""
+            DROP TABLE IF EXISTS 'hats'
+        """)
+        self._conn.executescript("""
+            CREATE TABLE hats (
+                id      INTEGER         PRIMARY KEY,
+                topping    TEXT        NOT NULL,
+                supplier    INTEGER      NOT NULL,
+                quantity   INTEGER       NOT NULL,
+                
+                FOREIGN KEY(supplier) REFERENCES suppliers(id)
+            );
 
+        """)
+        self._conn.executescript("""
+            DROP TABLE IF EXISTS 'orders'
+        """)
+        self._conn.executescript("""
             CREATE TABLE orders (
                 id      INTEGER     PRIMARY KEY,
                 location  INTEGER     NOT NULL,
                 hat           INTEGER     NOT NULL,
-
-                FOREIGN KEY(hat)     REFERENCES hats(id),
+                FOREIGN KEY(hat)     REFERENCES hats(id)
             );
         """)
 

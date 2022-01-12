@@ -1,7 +1,7 @@
 import sys
 from sys import argv
 from Repository import repo
-from src import Hat
+from src.Hat import Hat
 from src.Order import Order
 from src.Supplier import Supplier
 
@@ -10,14 +10,15 @@ def parse_config(config_path):
     with open(config_path) as text:
         lines_list = text.readlines()
     first_line = lines_list[0].strip().split(',')
-    num_of_hats = first_line[0]
-    num_of_suppliers = first_line[1]
-    for i in range(1, num_of_hats + 1):
-        line = lines_list[i].strip().split(',')
-        repo.hats.insert(Hat(line[0], line[1], line[2], line[3]))
+    num_of_hats = int(first_line[0])
+    num_of_suppliers = int(first_line[1])
     for i in range(num_of_hats + 1, num_of_hats + num_of_suppliers + 1):
         line = lines_list[i].strip().split(',')
-        repo.suppliers.insert(Supplier(line[0], line[1]))
+        repo.suppliers.insert(Supplier(int(line[0]), line[1]))
+    for i in range(1, num_of_hats + 1):
+        line = lines_list[i].strip().split(',')
+        hat = Hat(int(line[0]), line[1], int(line[2]),int(line[3]))
+        repo.hats.insert(hat)
 
 
 def parse_orders(orders_path):
@@ -38,6 +39,7 @@ class main(argv):
     orders_path = argv[2]
     output_path = argv[3]
     #
+    repo.create_tables()
     parse_config(config_path)
     parse_orders(orders_path)
     # print
