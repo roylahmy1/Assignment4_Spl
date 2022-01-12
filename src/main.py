@@ -1,3 +1,4 @@
+import sys
 from sys import argv
 from Repository import repo
 from src import Hat
@@ -5,8 +6,8 @@ from src.Order import Order
 from src.Supplier import Supplier
 
 
-def parse_config(config):
-    with open(config) as text:
+def parse_config(config_path):
+    with open(config_path) as text:
         lines_list = text.readlines()
     first_line = lines_list[0].strip().split(',')
     num_of_hats = first_line[0]
@@ -19,20 +20,29 @@ def parse_config(config):
         repo.suppliers.insert(Supplier(line[0], line[1]))
 
 
-def parse_orders(orders):
-    with open(orders) as text:
+def parse_orders(orders_path):
+    with open(orders_path) as text:
         lines_list = text.readlines()
     for i in range(0, len(lines_list)):
         line = lines_list[i].strip().split(',')
-        repo.orders.insert(Order(i, line[0], repo.hats.find(topping = line[1]).))
-
-
-def print_db():
-    repo.
+        hat = repo.hats.find({'topping': line[1]})[0]
+        repo.orders.insert(Order(i, line[0], hat[0]))
+        if hat.quantity > 1:
+            repo.hats.update({'quantity': hat.quantity - 1}, {'id': hat.id});
+        else:
+            repo.hats.delete({'id': hat.id});
 
 
 class main(argv):
-    config = argv[0]
-    orders = argv[1]
-    true_output = argv[2]
-    true_database = argv[3]
+    config_path = argv[1]
+    orders_path = argv[2]
+    output_path = argv[3]
+    #
+    parse_config(config_path)
+    parse_orders(orders_path)
+    # print
+    output_file = open(output_path, "w+")
+    for r in repo.get_orders_with_supplier():
+        output_file.write(r + "\r\n")
+    output_file.close()
+    sys.exit()

@@ -3,12 +3,15 @@ import sqlite3
 
 from src import Hat, Supplier, Order
 from src.DAO import DAO
+from src.OrdersWithSupplier import OrderWithSupplier
 
-# _conn = sqlite3.connect('grades.db')
+
+_conn = sqlite3.connect('database.db')
+
 
 class Repository(object):
-    def __init__(self, conn_path):
-        self._conn = sqlite3.connect(conn_path)
+    def __init__(self):
+        self._conn = sqlite3.connect('database.db')
         self._conn.text_factory = bytes
         self.hats = DAO(Hat, self._conn)
         self.suppliers = DAO(Supplier, self._conn)
@@ -42,6 +45,17 @@ class Repository(object):
                 FOREIGN KEY(hat)     REFERENCES hats(id),
             );
         """)
+
+    def get_orders_with_supplier(self):
+        c = self._conn.cursor()
+        all = c.execute("""
+            SELECT hats.topping, suppliers.name, orders.location 
+            FROM orders
+            JOIN hats ON hats.id = orders.hat
+            JOIN suppliers ON suppliers.id = hats.supplier
+        """).fetchall()
+
+        return [OrderWithSupplier(*row) for row in all]
 
 
 # see code in previous version...
