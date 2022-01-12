@@ -1,3 +1,6 @@
+import atexit
+
+
 class PersistenceLayer:
 
     def __init__(self):

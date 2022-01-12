@@ -4,10 +4,11 @@ import sqlite3
 from src import Hat, Supplier, Order
 from src.DAO import DAO
 
-_conn = sqlite3.connect('grades.db')
+# _conn = sqlite3.connect('grades.db')
+
 class Repository(object):
-    def __init__(self):
-        self._conn = sqlite3.connect('grades.db')
+    def __init__(self, conn_path):
+        self._conn = sqlite3.connect(conn_path)
         self._conn.text_factory = bytes
         self.hats = DAO(Hat, self._conn)
         self.suppliers = DAO(Supplier, self._conn)
@@ -18,7 +19,7 @@ class Repository(object):
         self._conn.close()
 
     def create_tables(self):
-        _conn.executescript("""
+        self._conn.executescript("""
             CREATE TABLE hats (
                 id      INTEGER         PRIMARY KEY,
                 topping    TEXT        NOT NULL,

@@ -58,3 +58,11 @@ class DAO(object):
         c = self._conn.cursor()
         c.execute(stmt, params)
         return orm(c, self._dto_type)
+
+    def delete(self, id, id_name):
+        stmt = 'DELETE FROM {} WHERE {}' \
+            .format(self._table_name, id_name + ' = ' + id)
+
+        self._conn.execute(stmt)
+
+

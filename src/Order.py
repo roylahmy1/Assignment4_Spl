@@ -2,4 +2,4 @@ class Order(object):
     def __init__(self, id, location, hat):
         self.id = id
         self.location = location
-        self.hat= hat
+        self.hat = hat
