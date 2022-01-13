@@ -42,9 +42,9 @@ if __name__ == '__main__':
     main_path = os.path.join(dir_name, "main.py")
     output_file = os.path.join(dir_name, "output.txt")
     db_file = os.path.join(dir_name, "database.db")
-    os.system(f'python3 {main_path} {sys.argv[2]} {sys.argv[3]} {output_file} {db_file}')
-    os.system(f'python3 compare_output.py {output_file} {sys.argv[4]} {db_file} {sys.argv[5]}')
-    shutil.rmtree(dir_name)
+    os.system(f'py {main_path} {sys.argv[2]} {sys.argv[3]} {output_file} {db_file}')
+    #os.system(f'py compare_output.py {output_file} {sys.argv[4]} {db_file} {sys.argv[5]}')
+    #shutil.rmtree(dir_name)
 
 
 

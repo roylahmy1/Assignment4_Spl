@@ -27,11 +27,11 @@ def parse_orders(orders_path):
     for i in range(0, len(lines_list)):
         line = lines_list[i].strip().split(',')
         hat = repo.hats.find_by_topping(line[1])
-        repo.orders.insert(Order(i + 1, line[0], hat.id))
+        repo.orders.insert(Order(i, line[0], hat.id))
         if hat.quantity > 1:
             repo.hats.update({'quantity': hat.quantity - 1}, {'id': hat.id});
-        #else:
-            #repo.hats.delete(hat.id)
+        else:
+            repo.hats.delete(hat.id)
 
 
 class main(argv):
@@ -45,18 +45,11 @@ class main(argv):
     # print
     output_file = open(output_path, "w+")
     for r in repo.get_orders_with_supplier():
-        output_file.write('{},{},{}\n'.format(r.topping.decode("utf-8") , r.supplier.decode("utf-8") , r.location.decode("utf-8")))
+        output_file.write('{} {} {} \n'.format(r.topping.decode("utf-8") , r.supplier.decode("utf-8") , r.location.decode("utf-8")))
     output_file.close()
-    # delete quantity 0
-    for r in repo.hats.find_all():
-        if r.quantity == 0:
-            repo.hats.delete(r.id)
     #
     for r in repo.hats.find_all():
         print('{} {} {} {}'.format(r.id ,r.topping, repo.suppliers.find(r.supplier).name , r.quantity))
-
-    for r in repo.orders.find_all():
-        print('{} {} {}'.format(r.id ,r.location, r.hat))
 
 
     print('finished')
