@@ -1,11 +1,11 @@
 import atexit
 import sqlite3
 
-from src.Hat import Hat
-from src.Supplier import Supplier
-from src.Order import Order
-from src.DAO import DAO
-from src.OrdersWithSupplier import OrderWithSupplier
+from Hats import Hats
+from Suppliers import Suppliers
+from Orders import Orders
+from DAO import DAO
+from OrdersWithSupplier import OrderWithSupplier
 
 
 _conn = sqlite3.connect('database.db')
@@ -15,9 +15,9 @@ class Repository(object):
     def __init__(self):
         self._conn = sqlite3.connect('database.db')
         self._conn.text_factory = bytes
-        self.hats = DAO(Hat, self._conn)
-        self.suppliers = DAO(Supplier, self._conn)
-        self.orders = DAO(Order, self._conn)
+        self.hats = Hats(self._conn) #DAO(Hat, self._conn)
+        self.suppliers = Suppliers(self._conn) #DAO(Supplier, self._conn)
+        self.orders =  Orders(self._conn) #DAO(Order, self._conn)
 
     def _close(self):
         self._conn.commit()
@@ -62,6 +62,14 @@ class Repository(object):
 
     def get_orders_with_supplier(self):
         c = self._conn.cursor()
+        #
+
+        alls = c.execute("""
+            SELECT location FROM orders
+        """).fetchall()
+
+
+        #
         all = c.execute("""
             SELECT hats.topping, suppliers.name, orders.location 
             FROM orders
